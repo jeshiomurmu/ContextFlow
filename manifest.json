@@ -1,0 +1,121 @@
+{
+  "manifest_version": 3,
+  "name": "ContextFlow \u2014 AI Context Manager",
+  "short_name": "ContextFlow",
+  "version": "1.1.0",
+  "description": "Capture, save & reuse AI conversation context across ANY platform. Free, open source, unlimited, no account needed. Your data stays on your device.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://aistudio.google.com/*",
+    "https://chat.deepseek.com/*",
+    "https://grok.com/*",
+    "https://x.com/*",
+    "https://perplexity.ai/*",
+    "https://www.perplexity.ai/*",
+    "https://copilot.microsoft.com/*",
+    "https://character.ai/*",
+    "https://poe.com/*",
+    "https://www.poe.com/*",
+    "https://mistral.ai/*",
+    "https://chat.mistral.ai/*",
+    "https://v0.dev/*",
+    "https://bolt.new/*",
+    "https://lovable.dev/*",
+    "https://replit.com/*",
+    "https://huggingface.co/*",
+    "https://cohere.com/*",
+    "https://together.ai/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://aistudio.google.com/*",
+        "https://chat.deepseek.com/*",
+        "https://grok.com/*",
+        "https://x.com/*",
+        "https://perplexity.ai/*",
+        "https://www.perplexity.ai/*",
+        "https://copilot.microsoft.com/*",
+        "https://character.ai/*",
+        "https://poe.com/*",
+        "https://www.poe.com/*",
+        "https://mistral.ai/*",
+        "https://chat.mistral.ai/*",
+        "https://v0.dev/*",
+        "https://bolt.new/*",
+        "https://lovable.dev/*",
+        "https://replit.com/*",
+        "https://huggingface.co/*",
+        "https://cohere.com/*",
+        "https://together.ai/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "ContextFlow",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "toggle-panel": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "Command+Shift+K"
+      },
+      "description": "Toggle ContextFlow panel on current page"
+    },
+    "quick-capture": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Quick-capture current AI conversation"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/*.png",
+        "content.css"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
+}

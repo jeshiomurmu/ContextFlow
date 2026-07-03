@@ -1,0 +1,282 @@
+/* ContextFlow — Content Script Styles */
+/* Injected into pages to style the capture button */
+
+#cf-capture-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483646;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: #fff;
+  border-radius: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateX(120%) scale(0.9);
+  opacity: 0;
+  user-select: none;
+  letter-spacing: 0.01em;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#cf-capture-btn.cf-visible {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+}
+
+#cf-capture-btn:hover {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.55);
+  transform: translateY(-2px) scale(1.02);
+}
+
+#cf-capture-btn:active {
+  transform: scale(0.97);
+}
+
+#cf-capture-btn.cf-capturing {
+  background: linear-gradient(135deg, #059669, #10B981);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+  animation: cfPulse 1.2s ease-in-out infinite;
+}
+
+#cf-capture-btn .cf-btn-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+#cf-capture-btn .cf-btn-label {
+  white-space: nowrap;
+}
+
+@keyframes cfPulse {
+  0%, 100% { box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4); }
+  50% { box-shadow: 0 4px 32px rgba(16, 185, 129, 0.7); }
+}
+
+/* ─── Floating Panel Styles ─────────────────────────────────────────────────── */
+
+#cf-panel {
+  position: fixed;
+  right: 20px;
+  top: 80px;
+  bottom: 80px;
+  width: 280px;
+  max-height: calc(100vh - 120px);
+  z-index: 2147483645;
+  background: #0D0D14;
+  border: 1px solid #252535;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(99,102,241,0.1);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+  transition: box-shadow 0.2s;
+  resize: vertical;
+}
+
+#cf-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
+}
+#cf-panel-header:active { cursor: grabbing; }
+
+#cf-panel-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+}
+
+#cf-panel-actions {
+  display: flex;
+  gap: 4px;
+}
+#cf-panel-actions button {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  line-height: 1;
+}
+#cf-panel-actions button:hover { background: rgba(255,255,255,0.28); }
+
+#cf-panel-search-wrap {
+  padding: 8px;
+  border-bottom: 1px solid #252535;
+  flex-shrink: 0;
+}
+
+#cf-panel-search {
+  width: 100%;
+  background: #15151F;
+  border: 1px solid #252535;
+  border-radius: 6px;
+  color: #E8E8F0;
+  font-size: 12px;
+  padding: 6px 10px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+#cf-panel-search:focus { border-color: #6366F1; }
+#cf-panel-search::placeholder { color: #44445A; }
+
+#cf-panel-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#cf-panel-list::-webkit-scrollbar { width: 3px; }
+#cf-panel-list::-webkit-scrollbar-thumb { background: #252535; border-radius: 2px; }
+
+#cf-panel-loading {
+  text-align: center;
+  color: #44445A;
+  font-size: 12px;
+  padding: 20px;
+}
+
+.cf-panel-empty {
+  text-align: center;
+  color: #44445A;
+  font-size: 12px;
+  padding: 24px 12px;
+  line-height: 1.6;
+}
+
+/* Panel Capsule Cards */
+.cf-panel-item {
+  background: #15151F;
+  border: 1px solid #252535;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: grab;
+  transition: all 0.15s;
+}
+.cf-panel-item:hover {
+  border-color: rgba(99,102,241,0.4);
+  background: #1C1C28;
+}
+.cf-panel-item:active { cursor: grabbing; }
+
+.cf-pi-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #E8E8F0;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cf-pi-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+.cf-pi-plat {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(99,102,241,0.12);
+  color: #6366F1;
+  border: 1px solid rgba(99,102,241,0.2);
+}
+.cf-pi-age {
+  font-size: 10px;
+  color: #44445A;
+}
+.cf-pi-summary {
+  font-size: 11px;
+  color: #8888B0;
+  line-height: 1.4;
+  margin-bottom: 7px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cf-pi-actions {
+  display: flex;
+  gap: 4px;
+}
+.cf-pi-inject, .cf-pi-copy {
+  flex: 1;
+  padding: 4px 6px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #252535;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.cf-pi-inject {
+  background: rgba(99,102,241,0.12);
+  color: #6366F1;
+  border-color: rgba(99,102,241,0.25);
+}
+.cf-pi-inject:hover {
+  background: #6366F1;
+  color: white;
+  border-color: #6366F1;
+}
+.cf-pi-copy {
+  background: transparent;
+  color: #8888B0;
+}
+.cf-pi-copy:hover {
+  background: #1C1C28;
+  color: #E8E8F0;
+  border-color: #44445A;
+}
+
+#cf-panel-footer {
+  padding: 8px;
+  border-top: 1px solid #252535;
+  flex-shrink: 0;
+}
+
+#cf-panel-capture {
+  width: 100%;
+  padding: 8px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: white;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+#cf-panel-capture:hover { opacity: 0.88; }

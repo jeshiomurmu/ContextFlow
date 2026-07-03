@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ContextFlow</title>
+  <link rel="stylesheet" href="popup.css"/>
+</head>
+<body>
+
+<!-- ─── Header ─────────────────────────────────────────────────── -->
+<header class="cf-header">
+  <div class="cf-logo">
+    <div class="cf-logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="7" width="18" height="2.5" rx="1.25" fill="white"/>
+        <rect x="3" y="11.5" width="14" height="2.5" rx="1.25" fill="white" opacity=".7"/>
+        <rect x="3" y="16" width="18" height="2.5" rx="1.25" fill="white"/>
+      </svg>
+    </div>
+    <span class="cf-logo-text">ContextFlow</span>
+    <span class="cf-badge">FREE · UNLIMITED</span>
+  </div>
+  <div class="cf-header-actions">
+    <button class="cf-icon-btn" id="btn-search-toggle" title="Search (Ctrl+F)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+    <button class="cf-icon-btn" id="btn-settings" title="Settings">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ─── Search Bar ──────────────────────────────────────────────── -->
+<div class="cf-search-bar" id="search-bar" style="display:none">
+  <svg class="cf-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+  <input type="text" id="search-input" placeholder="Search capsules…" autocomplete="off"/>
+  <button id="search-close" class="cf-search-close">✕</button>
+</div>
+
+<!-- ─── List View ───────────────────────────────────────────────── -->
+<main class="cf-main" id="view-list">
+
+  <!-- Toolbar -->
+  <div class="cf-toolbar">
+    <button class="cf-btn cf-btn-primary" id="btn-new">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New
+    </button>
+    <button class="cf-btn cf-btn-secondary" id="btn-capture">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
+      Capture Page
+    </button>
+    <select class="cf-sort-select" id="sort-select" title="Sort by">
+      <option value="updated">Recent</option>
+      <option value="created">Oldest</option>
+      <option value="alpha">A–Z</option>
+      <option value="platform">Platform</option>
+    </select>
+    <div class="cf-toolbar-right">
+      <button class="cf-icon-btn" id="btn-export" title="Export JSON">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <button class="cf-icon-btn" id="btn-import" title="Import JSON">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter chips -->
+  <div class="cf-filter-bar">
+    <button class="cf-chip cf-chip-active" data-filter="all">All</button>
+    <button class="cf-chip" data-filter="ChatGPT">ChatGPT</button>
+    <button class="cf-chip" data-filter="Claude">Claude</button>
+    <button class="cf-chip" data-filter="Gemini">Gemini</button>
+    <button class="cf-chip" data-filter="Grok">Grok</button>
+    <button class="cf-chip" data-filter="DeepSeek">DeepSeek</button>
+    <button class="cf-chip" data-filter="Perplexity">Perplexity</button>
+    <button class="cf-chip" data-filter="manual">Manual</button>
+  </div>
+
+  <!-- Capsule list -->
+  <div class="cf-capsule-list" id="capsule-list">
+    <div class="cf-empty" id="empty-state">
+      <div class="cf-empty-icon">📭</div>
+      <div class="cf-empty-title">No capsules yet</div>
+      <div class="cf-empty-body">Visit an AI chat and click <strong>⚡ Save Context</strong>, or create one manually.</div>
+      <button class="cf-btn cf-btn-primary" id="btn-empty-new" style="margin-top:12px">+ Create First Capsule</button>
+    </div>
+  </div>
+
+  <footer class="cf-footer">
+    <span id="footer-count">0 capsules</span>
+    <span class="cf-footer-dot">·</span>
+    <span class="cf-privacy-badge">🔒 100% local · no servers</span>
+  </footer>
+</main>
+
+<!-- ─── Edit / Create View ──────────────────────────────────────── -->
+<div class="cf-main" id="view-edit" style="display:none">
+  <div class="cf-view-header">
+    <button class="cf-back-btn" id="btn-back-from-edit">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <span class="cf-view-title" id="edit-view-title">New Capsule</span>
+    <span class="cf-version-badge" id="edit-version-badge" style="display:none"></span>
+  </div>
+
+  <div class="cf-form">
+    <input type="hidden" id="edit-id"/>
+
+    <label class="cf-label" for="edit-title">Title <span class="cf-required">*</span></label>
+    <input type="text" class="cf-input" id="edit-title" placeholder="e.g. React Dashboard — TypeScript + Tailwind" maxlength="120"/>
+    <div class="cf-char-count" id="title-count">0 / 120</div>
+
+    <label class="cf-label" for="edit-content">Context Content <span class="cf-required">*</span></label>
+    <textarea class="cf-textarea" id="edit-content" placeholder="Paste your full conversation, project details, constraints, goals…" rows="9"></textarea>
+    <div class="cf-content-stats" id="content-stats">0 words · 0 chars</div>
+
+    <label class="cf-label" for="edit-tags">Tags</label>
+    <div class="cf-tags-input-wrapper">
+      <input type="text" class="cf-input" id="edit-tags" placeholder="Type a tag and press Enter  (e.g. react, project-x)"/>
+      <div class="cf-tags-preview" id="tags-preview"></div>
+    </div>
+
+    <div class="cf-row">
+      <div class="cf-col">
+        <label class="cf-label" for="edit-platform">Platform</label>
+        <select class="cf-select" id="edit-platform">
+          <option value="Web">Web (Generic)</option>
+          <option value="ChatGPT">ChatGPT</option>
+          <option value="Claude">Claude</option>
+          <option value="Gemini">Gemini</option>
+          <option value="Grok">Grok</option>
+          <option value="DeepSeek">DeepSeek</option>
+          <option value="Perplexity">Perplexity</option>
+          <option value="Copilot">Copilot</option>
+          <option value="Mistral">Mistral</option>
+          <option value="Character.AI">Character.AI</option>
+          <option value="Poe">Poe</option>
+          <option value="v0">v0</option>
+          <option value="Bolt">Bolt</option>
+          <option value="Lovable">Lovable</option>
+          <option value="Replit">Replit</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="cf-col">
+        <label class="cf-label" for="edit-color">Accent Color</label>
+        <div class="cf-color-row">
+          <input type="color" class="cf-color-input" id="edit-color" value="#6366F1" title="Card accent color"/>
+          <div class="cf-color-swatches" id="color-swatches"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Version history (shown only when editing) -->
+    <div id="version-history-section" style="display:none">
+      <label class="cf-label">Version History</label>
+      <div class="cf-version-list" id="version-list"></div>
+    </div>
+
+    <div class="cf-form-actions">
+      <button class="cf-btn cf-btn-primary cf-btn-lg" id="btn-save-capsule">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Capsule
+      </button>
+      <button class="cf-btn cf-btn-ghost" id="btn-cancel-edit">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Settings View ───────────────────────────────────────────── -->
+<div class="cf-main" id="view-settings" style="display:none">
+  <div class="cf-view-header">
+    <button class="cf-back-btn" id="btn-back-from-settings">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </button>
+    <span class="cf-view-title">Settings</span>
+  </div>
+
+  <div class="cf-settings-body">
+    <div class="cf-settings-section">
+      <div class="cf-settings-label">Behavior</div>
+      <div class="cf-setting-row">
+        <div class="cf-setting-info"><span class="cf-setting-name">Show capture button on AI sites</span><span class="cf-setting-desc">⚡ button auto-injects on supported platforms</span></div>
+        <label class="cf-toggle"><input type="checkbox" id="setting-show-capture" checked/><span class="cf-slider"></span></label>
+      </div>
+      <div class="cf-setting-row">
+        <div class="cf-setting-info"><span class="cf-setting-name">Confirm before delete</span><span class="cf-setting-desc">Ask before permanently removing a capsule</span></div>
+        <label class="cf-toggle"><input type="checkbox" id="setting-confirm-delete" checked/><span class="cf-slider"></span></label>
+      </div>
+      <div class="cf-setting-row">
+        <div class="cf-setting-info"><span class="cf-setting-name">Auto-detect platform tags</span><span class="cf-setting-desc">Label capsules with the detected AI tool</span></div>
+        <label class="cf-toggle"><input type="checkbox" id="setting-auto-tag" checked/><span class="cf-slider"></span></label>
+      </div>
+      <div class="cf-setting-row">
+        <div class="cf-setting-info"><span class="cf-setting-name">Show capsule count badge</span><span class="cf-setting-desc">Display count on extension toolbar icon</span></div>
+        <label class="cf-toggle"><input type="checkbox" id="setting-badge" checked/><span class="cf-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="cf-settings-section">
+      <div class="cf-settings-label">Data Management</div>
+      <button class="cf-setting-action-btn" id="btn-export-settings">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export All Capsules (JSON backup)
+      </button>
+      <button class="cf-setting-action-btn" id="btn-import-settings">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import Capsules (merge from JSON)
+      </button>
+      <button class="cf-setting-action-btn cf-danger-btn" id="btn-clear-all">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        Clear All Capsules
+      </button>
+    </div>
+
+    <div class="cf-settings-section">
+      <div class="cf-settings-label">About ContextFlow</div>
+      <div class="cf-about-card">
+        <div class="cf-about-name">ContextFlow v1.0.0</div>
+        <div class="cf-about-desc">Free &amp; open source · MIT License · No accounts · No servers · No limits</div>
+        <div class="cf-about-links">
+          <a href="https://github.com/contextflow/extension" target="_blank" class="cf-link">GitHub</a>
+          <span>·</span>
+          <a href="https://github.com/contextflow/extension/issues" target="_blank" class="cf-link">Report Bug</a>
+          <span>·</span>
+          <a href="https://github.com/contextflow/extension/blob/main/README.md" target="_blank" class="cf-link">Docs</a>
+        </div>
+        <div class="cf-about-stats" id="about-stats">Loading stats…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="import-file" accept=".json" style="display:none"/>
+<div class="cf-popup-toast" id="popup-toast"></div>
+
+<script src="popup.js"></script>
+</body>
+</html>
